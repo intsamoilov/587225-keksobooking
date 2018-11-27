@@ -26,7 +26,7 @@ var OFFER_TITLES = [
   'Некрасивый негостеприимный домик',
   'Уютное бунгало далеко от моря',
   'Неуютное бунгало по колено в воде'];
-var TYPES = {
+var mapTypeToName = {
   'palace': 'Дворец',
   'flat': 'Квартира',
   'house': 'Дом',
@@ -96,7 +96,7 @@ var renderCard = function (card) {
   cardTemplate.querySelector('.popup__title').textContent = card.offer.title;
   cardTemplate.querySelector('.popup__text--address').textContent = card.offer.address;
   cardTemplate.querySelector('.popup__text--price').textContent = card.offer.price;
-  cardTemplate.querySelector('.popup__type').textContent = TYPES[card.offer.type];
+  cardTemplate.querySelector('.popup__type').textContent = mapTypeToName[card.offer.type];
   cardTemplate.querySelector('.popup__text--capacity').textContent =
     card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
   cardTemplate.querySelector('.popup__text--time').textContent =
@@ -149,11 +149,11 @@ var getDataArray = function () {
         title: randomTitles[i],
         address: posX + ', ' + posY,
         price: getRandomNum(PRICE_MIN, PRICE_MAX) + ' ₽/ночь',
-        type: OFFER_TYPES[getRandomNum(1, OFFER_TYPES.length) - 1],
+        type: OFFER_TYPES[getRandomNum(0, OFFER_TYPES.length - 1)],
         rooms: getRandomNum(1, MAX_ROOMS),
         guests: getRandomNum(1, MAX_GUESTS),
-        checkin: OFFER_TIMES[getRandomNum(1, OFFER_TIMES.length) - 1],
-        checkout: OFFER_TIMES[getRandomNum(1, OFFER_TIMES.length) - 1],
+        checkin: OFFER_TIMES[getRandomNum(0, OFFER_TIMES.length - 1)],
+        checkout: OFFER_TIMES[getRandomNum(0, OFFER_TIMES.length - 1)],
         features: getFeatures(OFFER_FEATURES),
         description: '',
         photos: getShuffleArray(OFFER_PHOTOS)
