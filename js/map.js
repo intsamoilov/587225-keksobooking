@@ -5,6 +5,8 @@ var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var PIN_IMG_WIDTH = 40;
 var PIN_IMG_HEIGHT = 40;
+var PIN_MAIN_WIDTH = 50;
+var PIN_MAIN_HEIGHT = 70;
 var PIN_MIN_Y = 130;
 var PIN_MAX_Y = 630;
 var PIN_MIN_X = 300;
@@ -126,6 +128,7 @@ var renderPins = function (cards) {
     img.height = PIN_IMG_HEIGHT;
     div.appendChild(img);
     fragment.appendChild(div);
+    addPinClickHandler(div, cards[i]);
   }
   pin.appendChild(fragment);
 };
@@ -167,12 +170,50 @@ var getDataArray = function () {
   return result;
 };
 // ----------------------------------------------------------------------------
-var initiate = function () {
+var setFormElementsNonActive = function (elements, disabled) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].disabled = disabled;
+  }
+};
+// ----------------------------------------------------------------------------
+var addPinClickHandler = function (pin, card) {
+  pin.addEventListener('click', function () {
+    renderCard(card);
+  });
+};
+// ----------------------------------------------------------------------------
+var prepareToStart = function (map, formElements) {
   var adCards = getDataArray();
-  var map = document.querySelector('.map');
+  var adForm = document.querySelector('.ad-form');
+  setFormElementsNonActive(formElements, false);
   map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
   renderPins(adCards);
-  renderCard(adCards[0]);
+};
+// ----------------------------------------------------------------------------
+var getMainPinCoordinates = function (pin, offsetX, offsetY) {
+  var x = pin.offsetLeft + offsetX;
+  var y = pin.offsetTop + offsetY;
+  return x + ', ' + y;
+};
+// ----------------------------------------------------------------------------
+var setAddressToForm = function (pin, offsetX, offsetY) {
+  var adress = document.querySelector('#address');
+  adress.value = getMainPinCoordinates(pin, offsetX, offsetY);
+};
+// ----------------------------------------------------------------------------
+var initiate = function () {
+  var map = document.querySelector('.map');
+  var formElements = document.querySelectorAll('.ad-form fieldset');
+  var mainPin = map.querySelector('.map__pin--main');
+  setFormElementsNonActive(formElements, true);
+  setAddressToForm(mainPin, PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT / 2);
+  mainPin.addEventListener('mouseup', function () {
+    if (map.classList.contains('map--faded')) {
+      prepareToStart(map, formElements);
+    }
+    setAddressToForm(mainPin, PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT);
+  });
 };
 // ----------------------------------------------------------------------------
 initiate();
