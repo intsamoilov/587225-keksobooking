@@ -93,7 +93,14 @@ var renderPhotos = function (card, element) {
   }
 };
 // ----------------------------------------------------------------------------
+var deleteCard = function () {
+  if (document.querySelector('.map__card')) {
+    document.querySelector('.map__card').remove();
+  }
+};
+// ----------------------------------------------------------------------------
 var renderCard = function (card) {
+  deleteCard();
   var cardTemplate = document.querySelector('#card').content.cloneNode(true);
   cardTemplate.querySelector('.popup__title').textContent = card.offer.title;
   cardTemplate.querySelector('.popup__text--address').textContent = card.offer.address;
@@ -110,6 +117,16 @@ var renderCard = function (card) {
   document.querySelector('.map').insertBefore(cardTemplate,
       document.querySelector('.map__filters-container'));
 
+  var element = document.querySelector('.map__card');
+  var popupClose = element.querySelector('.popup__close');
+  popupClose.addEventListener('click', function () {
+    deleteCard();
+  });
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === 27) {
+      deleteCard();
+    }
+  });
 };
 // ----------------------------------------------------------------------------
 var renderPins = function (cards) {
@@ -121,6 +138,7 @@ var renderPins = function (cards) {
     div.classList.add('map__pin');
     div.style.left = cards[i].location.x + 'px';
     div.style.top = cards[i].location.y + 'px';
+    div.tabIndex = 0;
     img.classList.add('rounded');
     img.src = cards[i].author.image;
     img.alt = PIN_ALT;
@@ -129,6 +147,7 @@ var renderPins = function (cards) {
     div.appendChild(img);
     fragment.appendChild(div);
     addPinClickHandler(div, cards[i]);
+    addPinKeyHandler(div, cards[i]);
   }
   pin.appendChild(fragment);
 };
@@ -182,6 +201,14 @@ var addPinClickHandler = function (pin, card) {
   });
 };
 // ----------------------------------------------------------------------------
+var addPinKeyHandler = function (pin, card) {
+  pin.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === 13) {
+      renderCard(card);
+    }
+  });
+};
+// ----------------------------------------------------------------------------
 var prepareToStart = function (map, formElements) {
   var adCards = getDataArray();
   var adForm = document.querySelector('.ad-form');
@@ -200,6 +227,7 @@ var getMainPinCoordinates = function (pin, offsetX, offsetY) {
 var setAddressToForm = function (pin, offsetX, offsetY) {
   var adress = document.querySelector('#address');
   adress.value = getMainPinCoordinates(pin, offsetX, offsetY);
+  adress.disabled = true;
 };
 // ----------------------------------------------------------------------------
 var initiate = function () {
