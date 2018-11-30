@@ -19,6 +19,8 @@ var MAX_GUESTS = 15;
 var OFFER_IMAGE_WIDTH = 45;
 var OFFER_IMAGE_HEIGHT = 40;
 var OFFER_IMAGE_ALT = 'Фотография жилья';
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 var OFFER_TITLES = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -93,14 +95,19 @@ var renderPhotos = function (card, element) {
   }
 };
 // ----------------------------------------------------------------------------
-var deleteCard = function () {
-  if (document.querySelector('.map__card')) {
-    document.querySelector('.map__card').remove();
+var hideCard = function () {
+  var domElement = document.querySelector('.map__card');
+  if (domElement) {
+    domElement.querySelector('.popup__close').removeEventListener('click', onPopupCloseClick);
+    domElement.remove();
   }
 };
 // ----------------------------------------------------------------------------
-var renderCard = function (card) {
-  deleteCard();
+var onPopupCloseClick = function () {
+  hideCard();
+};
+// ----------------------------------------------------------------------------
+var createCard = function (card) {
   var cardTemplate = document.querySelector('#card').content.cloneNode(true);
   cardTemplate.querySelector('.popup__title').textContent = card.offer.title;
   cardTemplate.querySelector('.popup__text--address').textContent = card.offer.address;
@@ -114,40 +121,52 @@ var renderCard = function (card) {
   cardTemplate.querySelector('.popup__description').textContent = card.offer.description;
   renderPhotos(card, cardTemplate);
   cardTemplate.querySelector('.popup__avatar').src = card.author.image;
-  document.querySelector('.map').insertBefore(cardTemplate,
+  return cardTemplate;
+};
+// ----------------------------------------------------------------------------
+var showCard = function (cardContent) {
+  document.querySelector('.map').insertBefore(cardContent,
       document.querySelector('.map__filters-container'));
-
   var element = document.querySelector('.map__card');
-  var popupClose = element.querySelector('.popup__close');
-  popupClose.addEventListener('click', function () {
-    deleteCard();
-  });
+  var popupCloseBtn = element.querySelector('.popup__close');
+  popupCloseBtn.addEventListener('click', onPopupCloseClick);
   document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 27) {
-      deleteCard();
+    if (evt.keyCode === ESC_KEYCODE) {
+      hideCard();
     }
   });
+};
+// ----------------------------------------------------------------------------
+var renderCard = function (card) {
+  hideCard();
+  var cardContent = createCard(card);
+  showCard(cardContent);
+};
+// ----------------------------------------------------------------------------
+var createPin = function (card, fragment) {
+  var div = document.createElement('div');
+  var img = document.createElement('img');
+  div.classList.add('map__pin');
+  div.style.left = card.location.x + 'px';
+  div.style.top = card.location.y + 'px';
+  div.tabIndex = 0;
+  img.classList.add('rounded');
+  img.src = card.author.image;
+  img.alt = PIN_ALT;
+  img.width = PIN_IMG_WIDTH;
+  img.height = PIN_IMG_HEIGHT;
+  div.appendChild(img);
+  fragment.appendChild(div);
+  addPinClickHandler(div, card);
+  addPinKeyHandler(div, card);
+  return fragment;
 };
 // ----------------------------------------------------------------------------
 var renderPins = function (cards) {
   var fragment = document.createDocumentFragment();
   var pin = document.querySelector('.map__pins');
   for (var i = 0; i < cards.length; i++) {
-    var div = document.createElement('div');
-    var img = document.createElement('img');
-    div.classList.add('map__pin');
-    div.style.left = cards[i].location.x + 'px';
-    div.style.top = cards[i].location.y + 'px';
-    div.tabIndex = 0;
-    img.classList.add('rounded');
-    img.src = cards[i].author.image;
-    img.alt = PIN_ALT;
-    img.width = PIN_IMG_WIDTH;
-    img.height = PIN_IMG_HEIGHT;
-    div.appendChild(img);
-    fragment.appendChild(div);
-    addPinClickHandler(div, cards[i]);
-    addPinKeyHandler(div, cards[i]);
+    fragment = createPin(cards[i], fragment);
   }
   pin.appendChild(fragment);
 };
@@ -189,9 +208,10 @@ var getDataArray = function () {
   return result;
 };
 // ----------------------------------------------------------------------------
-var setFormElementsNonActive = function (elements, disabled) {
-  for (var i = 0; i < elements.length; i++) {
-    elements[i].disabled = disabled;
+var setFormElementsNonActive = function (option) {
+  var formElements = document.querySelectorAll('.ad-form fieldset');
+  for (var i = 0; i < formElements.length; i++) {
+    formElements[i].disabled = option;
   }
 };
 // ----------------------------------------------------------------------------
@@ -203,46 +223,51 @@ var addPinClickHandler = function (pin, card) {
 // ----------------------------------------------------------------------------
 var addPinKeyHandler = function (pin, card) {
   pin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 13) {
+    if (evt.keyCode === ENTER_KEYCODE) {
       renderCard(card);
     }
   });
 };
 // ----------------------------------------------------------------------------
-var prepareToStart = function (map, formElements) {
+var getMainPinCoordinates = function (offsetX, offsetY) {
+  var mainPin = document.querySelector('.map__pin--main');
+  var x = mainPin.offsetLeft + offsetX;
+  var y = mainPin.offsetTop + offsetY;
+  return x + ', ' + y;
+};
+// ----------------------------------------------------------------------------
+var setAddressToForm = function (offsetX, offsetY) {
+  var adress = document.querySelector('#address');
+  adress.value = getMainPinCoordinates(offsetX, offsetY);
+  adress.disabled = true;
+};
+// ----------------------------------------------------------------------------
+var setSiteActive = function () {
+  var map = document.querySelector('.map');
   var adCards = getDataArray();
   var adForm = document.querySelector('.ad-form');
-  setFormElementsNonActive(formElements, false);
+  setFormElementsNonActive(false);
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
   renderPins(adCards);
 };
 // ----------------------------------------------------------------------------
-var getMainPinCoordinates = function (pin, offsetX, offsetY) {
-  var x = pin.offsetLeft + offsetX;
-  var y = pin.offsetTop + offsetY;
-  return x + ', ' + y;
+var onMainPinMouseup = function () {
+  setAddressToForm(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT);
 };
 // ----------------------------------------------------------------------------
-var setAddressToForm = function (pin, offsetX, offsetY) {
-  var adress = document.querySelector('#address');
-  adress.value = getMainPinCoordinates(pin, offsetX, offsetY);
-  adress.disabled = true;
+var onMainPinClick = function (evt) {
+  setSiteActive();
+  evt.currentTarget.removeEventListener('click', onMainPinClick);
 };
 // ----------------------------------------------------------------------------
-var initiate = function () {
-  var map = document.querySelector('.map');
-  var formElements = document.querySelectorAll('.ad-form fieldset');
-  var mainPin = map.querySelector('.map__pin--main');
-  setFormElementsNonActive(formElements, true);
-  setAddressToForm(mainPin, PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT / 2);
-  mainPin.addEventListener('mouseup', function () {
-    if (map.classList.contains('map--faded')) {
-      prepareToStart(map, formElements);
-    }
-    setAddressToForm(mainPin, PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT);
-  });
+var setSiteNonActive = function () {
+  var mainPin = document.querySelector('.map__pin--main');
+  setFormElementsNonActive(true);
+  setAddressToForm(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT / 2);
+  mainPin.addEventListener('mouseup', onMainPinMouseup);
+  mainPin.addEventListener('click', onMainPinClick);
 };
 // ----------------------------------------------------------------------------
-initiate();
+setSiteNonActive();
 // ----------------------------------------------------------------------------
