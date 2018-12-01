@@ -19,8 +19,10 @@ var MAX_GUESTS = 15;
 var OFFER_IMAGE_WIDTH = 45;
 var OFFER_IMAGE_HEIGHT = 40;
 var OFFER_IMAGE_ALT = 'Фотография жилья';
-var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
+var KeyCode = {
+  ESC: 27,
+  ENTER: 13
+};
 var OFFER_TITLES = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -96,10 +98,11 @@ var renderPhotos = function (card, element) {
 };
 // ----------------------------------------------------------------------------
 var hideCard = function () {
-  var domElement = document.querySelector('.map__card');
-  if (domElement) {
-    domElement.querySelector('.popup__close').removeEventListener('click', onPopupCloseClick);
-    domElement.remove();
+  var card = document.querySelector('.map__card');
+  if (card) {
+    card.querySelector('.popup__close').removeEventListener('click', onPopupCloseClick);
+    document.removeEventListener('keydown', onEscKeyDown);
+    card.remove();
   }
 };
 // ----------------------------------------------------------------------------
@@ -124,23 +127,24 @@ var createCard = function (card) {
   return cardTemplate;
 };
 // ----------------------------------------------------------------------------
+var onEscKeyDown = function (evt) {
+  if (evt.keyCode === KeyCode.ESC) {
+    hideCard();
+  }
+};
+// ----------------------------------------------------------------------------
 var showCard = function (cardContent) {
   document.querySelector('.map').insertBefore(cardContent,
       document.querySelector('.map__filters-container'));
-  var element = document.querySelector('.map__card');
-  var popupCloseBtn = element.querySelector('.popup__close');
+  var card = document.querySelector('.map__card');
+  var popupCloseBtn = card.querySelector('.popup__close');
   popupCloseBtn.addEventListener('click', onPopupCloseClick);
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      hideCard();
-    }
-  });
+  document.addEventListener('keydown', onEscKeyDown);
 };
 // ----------------------------------------------------------------------------
 var renderCard = function (card) {
   hideCard();
-  var cardContent = createCard(card);
-  showCard(cardContent);
+  showCard(createCard(card));
 };
 // ----------------------------------------------------------------------------
 var createPin = function (card, fragment) {
@@ -223,7 +227,7 @@ var addPinClickHandler = function (pin, card) {
 // ----------------------------------------------------------------------------
 var addPinKeyHandler = function (pin, card) {
   pin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === KeyCode.ENTER) {
       renderCard(card);
     }
   });
@@ -256,9 +260,13 @@ var onMainPinMouseup = function () {
   setAddressToForm(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT);
 };
 // ----------------------------------------------------------------------------
+var removeMainPinListener = function (evt) {
+  evt.currentTarget.removeEventListener('click', onMainPinClick);
+};
+// ----------------------------------------------------------------------------
 var onMainPinClick = function (evt) {
   setSiteActive();
-  evt.currentTarget.removeEventListener('click', onMainPinClick);
+  removeMainPinListener(evt);
 };
 // ----------------------------------------------------------------------------
 var setSiteNonActive = function () {
