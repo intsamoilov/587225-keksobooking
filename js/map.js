@@ -331,6 +331,8 @@ var checkCapasity = function () {
     roomCapacity.setCustomValidity('Укажите правильное количество гостей');
   } else if (roomCapacity.value === '0' && roomNumber.value !== '100') {
     roomCapacity.setCustomValidity('Добавьте гостей');
+  } else if (roomNumber.value === '100' && roomCapacity.value !== '0') {
+    roomCapacity.setCustomValidity('Уберите гостей');
   } else {
     roomCapacity.setCustomValidity('');
   }
