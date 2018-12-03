@@ -338,14 +338,25 @@ var checkCapasity = function () {
   }
 };
 // ----------------------------------------------------------------------------
+var checkInputsValidity = function () {
+  var requiredElements = adForm.querySelectorAll('[required]');
+  for (var i = 0; i < requiredElements.length; i++) {
+    if (requiredElements[i].checkValidity()) {
+      requiredElements[i].style = '';
+    } else {
+      requiredElements[i].style.border = '3px solid red';
+    }
+  }
+};
+// ----------------------------------------------------------------------------
 var addFormListeners = function () {
-  type.addEventListener('click', function (evt) {
+  type.addEventListener('change', function (evt) {
     setPriceByType(evt);
   });
-  timeIn.addEventListener('click', function (evt) {
+  timeIn.addEventListener('change', function (evt) {
     setTimeInOut(evt);
   });
-  timeOut.addEventListener('click', function (evt) {
+  timeOut.addEventListener('change', function (evt) {
     setTimeInOut(evt);
   });
   roomNumber.addEventListener('change', function (evt) {
@@ -353,6 +364,7 @@ var addFormListeners = function () {
   });
   submitBtn.addEventListener('click', function () {
     checkCapasity();
+    checkInputsValidity();
   });
 };
 // ----------------------------------------------------------------------------
