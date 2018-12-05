@@ -32,11 +32,24 @@ var OFFER_TITLES = [
   'Некрасивый негостеприимный домик',
   'Уютное бунгало далеко от моря',
   'Неуютное бунгало по колено в воде'];
-var mapTypeToName = {
-  'palace': 'Дворец',
-  'flat': 'Квартира',
-  'house': 'Дом',
-  'bungalo': 'Бунгало'};
+var mapTypeToValues = {
+  palace: {
+    name: 'Дворец',
+    price: 10000
+  },
+  flat: {
+    name: 'Квартира',
+    price: 1000
+  },
+  house: {
+    name: 'Дом',
+    price: 5000
+  },
+  bungalo: {
+    name: 'Бунгало',
+    price: 0
+  }
+};
 var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var OFFER_TIMES = ['12:00', '13:00', '14:00'];
 var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -44,6 +57,17 @@ var OFFER_PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+// ----------------------------------------------------------------------------
+var map = document.querySelector('.map');
+var mainPin = document.querySelector('.map__pin--main');
+var adForm = document.querySelector('.ad-form');
+var adress = document.querySelector('#address');
+var roomCapacity = document.getElementById('capacity');
+var roomNumber = document.getElementById('room_number');
+var type = document.getElementById('type');
+var price = document.getElementById('price');
+var timeIn = document.getElementById('timein');
+var timeOut = document.getElementById('timeout');
 // ----------------------------------------------------------------------------
 var getRandomNum = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -115,7 +139,7 @@ var createCard = function (card) {
   cardTemplate.querySelector('.popup__title').textContent = card.offer.title;
   cardTemplate.querySelector('.popup__text--address').textContent = card.offer.address;
   cardTemplate.querySelector('.popup__text--price').textContent = card.offer.price;
-  cardTemplate.querySelector('.popup__type').textContent = mapTypeToName[card.offer.type];
+  cardTemplate.querySelector('.popup__type').textContent = mapTypeToValues[card.offer.type].name;
   cardTemplate.querySelector('.popup__text--capacity').textContent =
     card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
   cardTemplate.querySelector('.popup__text--time').textContent =
@@ -234,26 +258,23 @@ var addPinKeyHandler = function (pin, card) {
 };
 // ----------------------------------------------------------------------------
 var getMainPinCoordinates = function (offsetX, offsetY) {
-  var mainPin = document.querySelector('.map__pin--main');
   var x = mainPin.offsetLeft + offsetX;
   var y = mainPin.offsetTop + offsetY;
   return x + ', ' + y;
 };
 // ----------------------------------------------------------------------------
 var setAddressToForm = function (offsetX, offsetY) {
-  var adress = document.querySelector('#address');
   adress.value = getMainPinCoordinates(offsetX, offsetY);
   adress.disabled = true;
 };
 // ----------------------------------------------------------------------------
 var setSiteActive = function () {
-  var map = document.querySelector('.map');
   var adCards = getDataArray();
-  var adForm = document.querySelector('.ad-form');
   setFormElementsNonActive(false);
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
   renderPins(adCards);
+  addFormListeners();
 };
 // ----------------------------------------------------------------------------
 var onMainPinMouseup = function () {
@@ -270,11 +291,82 @@ var onMainPinClick = function (evt) {
 };
 // ----------------------------------------------------------------------------
 var setSiteNonActive = function () {
-  var mainPin = document.querySelector('.map__pin--main');
   setFormElementsNonActive(true);
   setAddressToForm(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT / 2);
   mainPin.addEventListener('mouseup', onMainPinMouseup);
   mainPin.addEventListener('click', onMainPinClick);
+};
+// ----------------------------------------------------------------------------
+var setPriceByType = function (evt) {
+  price.min = mapTypeToValues[evt.value].price;
+  price.placeholder = mapTypeToValues[evt.value].price;
+};
+// ----------------------------------------------------------------------------
+var setTimeInOut = function (evt) {
+  if (evt === timeIn) {
+    timeOut.value = timeIn.value;
+  } else {
+    timeIn.value = timeOut.value;
+  }
+};
+// ----------------------------------------------------------------------------
+var setGuestsValidityByRooms = function (evt) {
+  var options = roomCapacity.querySelectorAll('option');
+  options.forEach(function (item) {
+    item.disabled = true;
+  });
+  if (evt.value === '100') {
+    options[0].disabled = false;
+  } else {
+    for (var i = evt.value; i > 0; i--) {
+      options[i].disabled = false;
+    }
+  }
+  checkCapasity();
+};
+// ----------------------------------------------------------------------------
+var checkCapasity = function () {
+  if (roomCapacity.value > roomNumber.value) {
+    roomCapacity.setCustomValidity('Укажите правильное количество гостей');
+  } else if (roomCapacity.value === '0' && roomNumber.value !== '100') {
+    roomCapacity.setCustomValidity('Добавьте гостей');
+  } else if (roomNumber.value === '100' && roomCapacity.value !== '0') {
+    roomCapacity.setCustomValidity('Уберите гостей');
+  } else {
+    roomCapacity.setCustomValidity('');
+    roomCapacity.style = '';
+  }
+};
+// ----------------------------------------------------------------------------
+var setInputsValidStyle = function (evt) {
+  evt.target.style.border = '3px solid red';
+};
+// ----------------------------------------------------------------------------
+var changeEventHandler = function (evt) {
+  if (evt.target.validity.valid) {
+    evt.target.style = '';
+  }
+  switch (evt.target) {
+    case timeIn:
+    case timeOut:
+      setTimeInOut(evt.target);
+      break;
+    case type:
+      setPriceByType(evt.target);
+      break;
+    case roomNumber:
+      setGuestsValidityByRooms(evt.target);
+      break;
+    case roomCapacity:
+      checkCapasity();
+      break;
+  }
+};
+// ----------------------------------------------------------------------------
+var addFormListeners = function () {
+  var form = document.querySelector('.ad-form');
+  form.addEventListener('change', changeEventHandler, true);
+  form.addEventListener('invalid', setInputsValidStyle, true);
 };
 // ----------------------------------------------------------------------------
 setSiteNonActive();
