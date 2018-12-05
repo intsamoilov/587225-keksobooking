@@ -68,7 +68,6 @@ var type = document.getElementById('type');
 var price = document.getElementById('price');
 var timeIn = document.getElementById('timein');
 var timeOut = document.getElementById('timeout');
-var submitBtn = document.querySelector('.ad-form__submit');
 // ----------------------------------------------------------------------------
 var getRandomNum = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -299,12 +298,12 @@ var setSiteNonActive = function () {
 };
 // ----------------------------------------------------------------------------
 var setPriceByType = function (evt) {
-  price.min = mapTypeToValues[evt.currentTarget.value].price;
-  price.placeholder = mapTypeToValues[evt.currentTarget.value].price;
+  price.min = mapTypeToValues[evt.value].price;
+  price.placeholder = mapTypeToValues[evt.value].price;
 };
 // ----------------------------------------------------------------------------
 var setTimeInOut = function (evt) {
-  if (evt.currentTarget === timeIn) {
+  if (evt === timeIn) {
     timeOut.value = timeIn.value;
   } else {
     timeIn.value = timeOut.value;
@@ -313,17 +312,17 @@ var setTimeInOut = function (evt) {
 // ----------------------------------------------------------------------------
 var setGuestsValidityByRooms = function (evt) {
   var options = roomCapacity.querySelectorAll('option');
-  var target = evt.currentTarget;
   options.forEach(function (item) {
     item.disabled = true;
   });
-  if (target.value === '100') {
+  if (evt.value === '100') {
     options[0].disabled = false;
   } else {
-    for (var i = target.value; i > 0; i--) {
+    for (var i = evt.value; i > 0; i--) {
       options[i].disabled = false;
     }
   }
+  checkCapasity();
 };
 // ----------------------------------------------------------------------------
 var checkCapasity = function () {
@@ -335,37 +334,39 @@ var checkCapasity = function () {
     roomCapacity.setCustomValidity('Уберите гостей');
   } else {
     roomCapacity.setCustomValidity('');
+    roomCapacity.style = '';
   }
 };
 // ----------------------------------------------------------------------------
-var checkInputsValidity = function () {
-  var requiredElements = adForm.querySelectorAll('[required]');
-  for (var i = 0; i < requiredElements.length; i++) {
-    if (requiredElements[i].checkValidity()) {
-      requiredElements[i].style = '';
-    } else {
-      requiredElements[i].style.border = '3px solid red';
-    }
+var setInputsValidStyle = function (evt) {
+  evt.target.style.border = '3px solid red';
+};
+// ----------------------------------------------------------------------------
+var changeEventHandler = function (evt) {
+  if (evt.target.validity.valid) {
+    evt.target.style = '';
+  }
+  switch (evt.target) {
+    case timeIn:
+    case timeOut:
+      setTimeInOut(evt.target);
+      break;
+    case type:
+      setPriceByType(evt.target);
+      break;
+    case roomNumber:
+      setGuestsValidityByRooms(evt.target);
+      break;
+    case roomCapacity:
+      checkCapasity();
+      break;
   }
 };
 // ----------------------------------------------------------------------------
 var addFormListeners = function () {
-  type.addEventListener('change', function (evt) {
-    setPriceByType(evt);
-  });
-  timeIn.addEventListener('change', function (evt) {
-    setTimeInOut(evt);
-  });
-  timeOut.addEventListener('change', function (evt) {
-    setTimeInOut(evt);
-  });
-  roomNumber.addEventListener('change', function (evt) {
-    setGuestsValidityByRooms(evt);
-  });
-  submitBtn.addEventListener('click', function () {
-    checkCapasity();
-    checkInputsValidity();
-  });
+  var form = document.querySelector('.ad-form');
+  form.addEventListener('change', changeEventHandler, true);
+  form.addEventListener('invalid', setInputsValidStyle, true);
 };
 // ----------------------------------------------------------------------------
 setSiteNonActive();
