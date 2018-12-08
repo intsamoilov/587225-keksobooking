@@ -269,32 +269,59 @@ var setAddressToForm = function (offsetX, offsetY) {
 };
 // ----------------------------------------------------------------------------
 var setSiteActive = function () {
-  var adCards = getDataArray();
-  setFormElementsNonActive(false);
-  map.classList.remove('map--faded');
-  adForm.classList.remove('ad-form--disabled');
-  renderPins(adCards);
-  addFormListeners();
+  if (map.classList.contains('map--faded')) {
+    var adCards = getDataArray();
+    setFormElementsNonActive(false);
+    map.classList.remove('map--faded');
+    adForm.classList.remove('ad-form--disabled');
+    renderPins(adCards);
+    addFormListeners();
+  }
 };
 // ----------------------------------------------------------------------------
-var onMainPinMouseup = function () {
-  setAddressToForm(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT);
+var endCoord = {};
+var shift = {};
+var startCoord = {};
+// ----------------------------------------------------------------------------
+var onMouseMove = function (moveEvt) {
+  shift.x = startCoord.x - moveEvt.clientX;
+  shift.y = startCoord.y - moveEvt.clientY;
+  startCoord.x = moveEvt.clientX;
+  startCoord.y = moveEvt.clientY;
+  endCoord.x = mainPin.offsetLeft - shift.x;
+  endCoord.y = mainPin.offsetTop - shift.y;
+  if (endCoord.x > PIN_MAX_X - PIN_MAIN_WIDTH / 2) {
+    endCoord.x = PIN_MAX_X - PIN_MAIN_WIDTH / 2;
+  } else if (endCoord.x < PIN_MIN_X - PIN_MAIN_WIDTH / 2) {
+    endCoord.x = PIN_MIN_X - PIN_MAIN_WIDTH / 2;
+  }
+  if (endCoord.y > PIN_MAX_Y - PIN_MAIN_HEIGHT) {
+    endCoord.y = PIN_MAX_Y - PIN_MAIN_HEIGHT;
+  } else if (endCoord.y < PIN_MIN_Y - PIN_MAIN_HEIGHT) {
+    endCoord.y = PIN_MIN_Y - PIN_MAIN_HEIGHT;
+  }
+  mainPin.style.left = endCoord.x + 'px';
+  mainPin.style.top = endCoord.y + 'px';
 };
 // ----------------------------------------------------------------------------
-var removeMainPinListener = function (evt) {
-  evt.currentTarget.removeEventListener('click', onMainPinClick);
-};
-// ----------------------------------------------------------------------------
-var onMainPinClick = function (evt) {
+var onMouseUp = function () {
   setSiteActive();
-  removeMainPinListener(evt);
+  setAddressToForm(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT);
+  document.removeEventListener('mousemove', onMouseMove);
+  document.removeEventListener('mouseup', onMouseUp);
+};
+// ----------------------------------------------------------------------------
+var onMainPinMousedown = function (evt) {
+  startCoord.x = evt.clientX;
+  startCoord.y = evt.clientY;
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 };
 // ----------------------------------------------------------------------------
 var setSiteNonActive = function () {
   setFormElementsNonActive(true);
   setAddressToForm(PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT / 2);
-  mainPin.addEventListener('mouseup', onMainPinMouseup);
-  mainPin.addEventListener('click', onMainPinClick);
+  mainPin.addEventListener('mousedown', onMainPinMousedown);
 };
 // ----------------------------------------------------------------------------
 var setPriceByType = function (evt) {
@@ -338,16 +365,18 @@ var checkCapasity = function () {
   }
 };
 // ----------------------------------------------------------------------------
-var setInputsValidStyle = function (evt) {
+var formElementsInvalidHandler = function (evt) {
   evt.target.style.border = '3px solid red';
 };
 // ----------------------------------------------------------------------------
-var changeEventHandler = function (evt) {
+var formElementsChangeHandler = function (evt) {
   if (evt.target.validity.valid) {
     evt.target.style = '';
   }
   switch (evt.target) {
     case timeIn:
+      setTimeInOut(evt.target);
+      break;
     case timeOut:
       setTimeInOut(evt.target);
       break;
@@ -365,8 +394,8 @@ var changeEventHandler = function (evt) {
 // ----------------------------------------------------------------------------
 var addFormListeners = function () {
   var form = document.querySelector('.ad-form');
-  form.addEventListener('change', changeEventHandler, true);
-  form.addEventListener('invalid', setInputsValidStyle, true);
+  form.addEventListener('change', formElementsChangeHandler, true);
+  form.addEventListener('invalid', formElementsInvalidHandler, true);
 };
 // ----------------------------------------------------------------------------
 setSiteNonActive();
