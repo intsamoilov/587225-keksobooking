@@ -32,8 +32,10 @@
       authors = window.service.getShuffleArray(authors);
       var randomTitles = window.service.getShuffleArray(OFFER_TITLES);
       for (var i = 0; i < AD_COUNT; i++) {
-        var posX = window.service.getRandomNum(window.map.PIN_MIN_X, window.map.PIN_MAX_X) - Math.round(window.pins.PIN_WIDTH / 2);
-        var posY = window.service.getRandomNum(window.map.PIN_MIN_Y, window.map.PIN_MAX_Y) - window.pins.PIN_HEIGHT;
+        var posX = window.service.getRandomNum(window.variables.PIN_MIN_X, window.variables.PIN_MAX_X)
+          - Math.round(window.pins.PIN_WIDTH / 2);
+        var posY = window.service.getRandomNum(window.variables.PIN_MIN_Y, window.variables.PIN_MAX_Y)
+          - window.pins.PIN_HEIGHT;
         result.push({
           author: {
             image: authors[i]

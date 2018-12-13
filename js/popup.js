@@ -4,18 +4,9 @@
   var OFFER_IMAGE_HEIGHT = 40;
   var OFFER_IMAGE_ALT = 'Фотография жилья';
   // --------------------------------------------------------------------------
-  var hideCard = function () {
-    var card = document.querySelector('.map__card');
-    if (card) {
-      card.querySelector('.popup__close').removeEventListener('click', onPopupCloseClick);
-      document.removeEventListener('keydown', onEscKeyDown);
-      card.remove();
-    }
-  };
-  // --------------------------------------------------------------------------
   var onEscKeyDown = function (evt) {
-    if (evt.keyCode === window.map.KeyCode.ESC) {
-      hideCard();
+    if (evt.keyCode === window.variables.KeyCode.ESC) {
+      window.popup.hideCard();
     }
   };
   // --------------------------------------------------------------------------
@@ -47,7 +38,7 @@
     cardTemplate.querySelector('.popup__title').textContent = card.offer.title;
     cardTemplate.querySelector('.popup__text--address').textContent = card.offer.address;
     cardTemplate.querySelector('.popup__text--price').textContent = card.offer.price;
-    cardTemplate.querySelector('.popup__type').textContent = window.map.mapTypeToValues[card.offer.type].name;
+    cardTemplate.querySelector('.popup__type').textContent = window.variables.mapTypeToValues[card.offer.type].name;
     cardTemplate.querySelector('.popup__text--capacity').textContent =
       card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
     cardTemplate.querySelector('.popup__text--time').textContent =
@@ -69,13 +60,21 @@
   };
   // --------------------------------------------------------------------------
   var onPopupCloseClick = function () {
-    hideCard();
+    window.popup.hideCard();
   };
   // --------------------------------------------------------------------------
   window.popup = {
     renderCard: function (card) {
-      hideCard();
+      window.popup.hideCard();
       showCard(createCard(card));
+    },
+    hideCard: function () {
+      var card = document.querySelector('.map__card');
+      if (card) {
+        card.querySelector('.popup__close').removeEventListener('click', onPopupCloseClick);
+        document.removeEventListener('keydown', onEscKeyDown);
+        card.remove();
+      }
     }
   };
 })();

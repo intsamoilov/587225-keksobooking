@@ -1,31 +1,7 @@
 'use strict';
 (function () {
-  var PIN_MIN_Y = 130;
-  var PIN_MAX_Y = 630;
-  var PIN_MIN_X = 300;
-  var PIN_MAX_X = 900;
-  var KeyCode = {
-    ESC: 27,
-    ENTER: 13
-  };
-  var mapTypeToValues = {
-    palace: {
-      name: 'Дворец',
-      price: 10000
-    },
-    flat: {
-      name: 'Квартира',
-      price: 1000
-    },
-    house: {
-      name: 'Дом',
-      price: 5000
-    },
-    bungalo: {
-      name: 'Бунгало',
-      price: 0
-    }
-  };
+  var PIN_MAIN_WIDTH = 50;
+  var PIN_MAIN_HEIGHT = 70;
   // ----------------------------------------------------------------------------
   var map = document.querySelector('.map');
   var adForm = document.querySelector('.ad-form');
@@ -39,29 +15,35 @@
   // ----------------------------------------------------------------------------
   var setSiteNonActive = function () {
     setFormElementsNonActive(true);
-    window.pointer.setAddressToForm(window.pointer.PIN_MAIN_WIDTH / 2, window.pointer.PIN_MAIN_HEIGHT / 2);
+    window.form.setAddressToForm(window.pointer.mainPin, PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT / 2);
     window.pointer.mainPin.addEventListener('mousedown', window.pointer.onMainPinMousedown);
+    window.pointer.init(setSiteActive, checkCoord);
   };
   // ----------------------------------------------------------------------------
-  window.map = {
-    PIN_MIN_Y: PIN_MIN_Y,
-    PIN_MAX_Y: PIN_MAX_Y,
-    PIN_MIN_X: PIN_MIN_X,
-    PIN_MAX_X: PIN_MAX_X,
-    KeyCode: KeyCode,
-    // ------------------------------------------------------------------------
-    mapTypeToValues: mapTypeToValues,
-    // ------------------------------------------------------------------------
-    setSiteActive: function () {
-      if (map.classList.contains('map--faded')) {
-        var adCards = window.data.getDataArray();
-        setFormElementsNonActive(false);
-        map.classList.remove('map--faded');
-        adForm.classList.remove('ad-form--disabled');
-        window.pins.renderPins(adCards);
-        window.form.addFormListeners();
-      }
+  var setSiteActive = function () {
+    window.form.setAddressToForm(window.pointer.mainPin, PIN_MAIN_WIDTH / 2, PIN_MAIN_HEIGHT);
+    if (map.classList.contains('map--faded')) {
+      var adCards = window.data.getDataArray();
+      setFormElementsNonActive(false);
+      map.classList.remove('map--faded');
+      adForm.classList.remove('ad-form--disabled');
+      window.pins.renderPins(adCards);
+      window.form.addFormListeners();
     }
+  };
+  // ----------------------------------------------------------------------------
+  var checkCoord = function (endCoord) {
+    if (endCoord.x > window.variables.PIN_MAX_X - PIN_MAIN_WIDTH / 2) {
+      endCoord.x = window.variables.PIN_MAX_X - PIN_MAIN_WIDTH / 2;
+    } else if (endCoord.x < window.variables.PIN_MIN_X - PIN_MAIN_WIDTH / 2) {
+      endCoord.x = window.variables.PIN_MIN_X - PIN_MAIN_WIDTH / 2;
+    }
+    if (endCoord.y > window.variables.PIN_MAX_Y - PIN_MAIN_HEIGHT) {
+      endCoord.y = window.variables.PIN_MAX_Y - PIN_MAIN_HEIGHT;
+    } else if (endCoord.y < window.variables.PIN_MIN_Y - PIN_MAIN_HEIGHT) {
+      endCoord.y = window.variables.PIN_MIN_Y - PIN_MAIN_HEIGHT;
+    }
+    return endCoord;
   };
   // ----------------------------------------------------------------------------
   setSiteNonActive();

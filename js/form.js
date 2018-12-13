@@ -6,6 +6,7 @@
   var timeOut = document.getElementById('timeout');
   var price = document.getElementById('price');
   var roomCapacity = document.getElementById('capacity');
+  var adress = document.querySelector('#address');
   // --------------------------------------------------------------------------
   var setTimeInOut = function (evt) {
     if (evt === timeIn) {
@@ -16,8 +17,8 @@
   };
   // --------------------------------------------------------------------------
   var setPriceByType = function (evt) {
-    price.min = window.map.mapTypeToValues[evt.value].price;
-    price.placeholder = window.map.mapTypeToValues[evt.value].price;
+    price.min = window.variables.mapTypeToValues[evt.value].price;
+    price.placeholder = window.variables.mapTypeToValues[evt.value].price;
   };
   // --------------------------------------------------------------------------
   var setGuestsValidityByRooms = function (evt) {
@@ -75,11 +76,21 @@
     }
   };
   // --------------------------------------------------------------------------
+  var getCoordinates = function (target, offsetX, offsetY) {
+    var x = target.offsetLeft + offsetX;
+    var y = target.offsetTop + offsetY;
+    return x + ', ' + y;
+  };
+  // --------------------------------------------------------------------------
   window.form = {
     addFormListeners: function () {
       var form = document.querySelector('.ad-form');
       form.addEventListener('change', formElementsChangeHandler, true);
       form.addEventListener('invalid', formElementsInvalidHandler, true);
+    },
+    setAddressToForm: function (target, offsetX, offsetY) {
+      adress.value = getCoordinates(target, offsetX, offsetY);
+      adress.disabled = true;
     }
   };
 })();
