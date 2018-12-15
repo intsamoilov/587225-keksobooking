@@ -29,6 +29,16 @@
       }
       pin.appendChild(fragment);
     },
+    // ------------------------------------------------------------------------
+    removePins: function () {
+      var pinsArr = document.querySelectorAll('.map__pin');
+      pinsArr.forEach(function (item) {
+        if (!item.classList.contains('map__pin--main')) {
+          item.remove();
+        }
+      });
+    },
+    // ------------------------------------------------------------------------
     addPinClickHandler: addPinClickHandler,
     addPinKeyHandler: addPinKeyHandler
   };

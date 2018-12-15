@@ -1,5 +1,9 @@
 'use strict';
 (function () {
+  var LOAD_SERVER_URL = 'https://js.dump.academy/keksobooking/data';
+  var UPLOAD_SERVER_URL = 'https://js.dump.academy/keksobooking';
+  var successMessage = 'Ваше объявление отправлено!';
+  var errorMessage = 'Ошибка загрузки. Код ошибки: ';
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
   var PIN_MIN_X = 300;
@@ -26,12 +30,20 @@
       price: 0
     }
   };
+  // --------------------------------------------------------------------------
+  var adForm = document.querySelector('.ad-form');
+  // --------------------------------------------------------------------------
   window.variables = {
     PIN_MIN_Y: PIN_MIN_Y,
     PIN_MAX_Y: PIN_MAX_Y,
     PIN_MIN_X: PIN_MIN_X,
     PIN_MAX_X: PIN_MAX_X,
     KeyCode: KeyCode,
-    mapTypeToValues: mapTypeToValues
+    mapTypeToValues: mapTypeToValues,
+    LOAD_SERVER_URL: LOAD_SERVER_URL,
+    UPLOAD_SERVER_URL: UPLOAD_SERVER_URL,
+    adForm: adForm,
+    successMessage: successMessage,
+    errorMessage: errorMessage
   };
 })();

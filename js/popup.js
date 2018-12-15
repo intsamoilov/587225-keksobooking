@@ -46,7 +46,7 @@
     renderFeatures(card, cardTemplate);
     cardTemplate.querySelector('.popup__description').textContent = card.offer.description;
     renderPhotos(card, cardTemplate);
-    cardTemplate.querySelector('.popup__avatar').src = card.author.image;
+    cardTemplate.querySelector('.popup__avatar').src = card.author.avatar;
     return cardTemplate;
   };
   // --------------------------------------------------------------------------

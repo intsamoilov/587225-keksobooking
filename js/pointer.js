@@ -1,5 +1,7 @@
 'use strict';
 (function () {
+  var MAIN_PIN_START_LEFT = '570px';
+  var MAIN_PIN_START_TOP = '375px';
   var endCoord = {};
   var shift = {};
   var startCoord = {};
@@ -33,6 +35,12 @@
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     },
+    // ------------------------------------------------------------------------
+    setToStart: function () {
+      mainPin.style.left = MAIN_PIN_START_LEFT;
+      mainPin.style.top = MAIN_PIN_START_TOP;
+    },
+    // ------------------------------------------------------------------------
     init: function (setSiteActive, checkCoord) {
       callbackSite = setSiteActive;
       callbackCoord = checkCoord;
