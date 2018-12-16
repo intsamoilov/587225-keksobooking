@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var allElements = window.variables.adForm.querySelectorAll('*');
+  var allElements = window.variables.adForm.elements;
   var roomNumber = document.getElementById('room_number');
   var type = document.getElementById('type');
   var timeIn = document.getElementById('timein');
@@ -79,13 +79,13 @@
     }
   };
   // --------------------------------------------------------------------------
-  var onLoad = function () {
+  var callbackOnLoad = function () {
     var messageStatus = window.variables.successMessage;
     window.messages.createMessage('success', messageStatus);
     resetAll();
   };
   // --------------------------------------------------------------------------
-  var onError = function (status) {
+  var callbackOnError = function (status) {
     var messageStatus = window.variables.errorMessage + status;
     window.messages.createMessage('error', messageStatus);
   };
@@ -96,7 +96,7 @@
   // --------------------------------------------------------------------------
   var formSubmitHandler = function (evt) {
     evt.preventDefault();
-    window.backend.uploadToServer(new FormData(evt.currentTarget), onLoad, onError);
+    window.backend.uploadToServer(new FormData(evt.currentTarget), callbackOnLoad, callbackOnError);
   };
   // --------------------------------------------------------------------------
   var getCoordinates = function (target, offsetX, offsetY) {
@@ -118,10 +118,10 @@
       adress.readOnly = true;
     },
     setFormElementsNonActive: function (option) {
-      allElements.forEach(function (item) {
-        item.style = '';
-        item.disabled = option;
-      });
+      for (var i = 0; i < allElements.length; i++) {
+        allElements[i].style = '';
+        allElements[i].disabled = option;
+      }
     },
     resetAction: function (callback) {
       resetAll = callback;
