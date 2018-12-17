@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  var allElements = window.variables.adForm.elements;
   var roomNumber = document.getElementById('room_number');
   var type = document.getElementById('type');
   var timeIn = document.getElementById('timein');
@@ -7,6 +8,9 @@
   var price = document.getElementById('price');
   var roomCapacity = document.getElementById('capacity');
   var adress = document.querySelector('#address');
+  var btnReset = document.querySelector('.ad-form__reset');
+  var options = roomCapacity.querySelectorAll('option');
+  var resetAll;
   // --------------------------------------------------------------------------
   var setTimeInOut = function (evt) {
     if (evt === timeIn) {
@@ -22,7 +26,6 @@
   };
   // --------------------------------------------------------------------------
   var setGuestsValidityByRooms = function (evt) {
-    var options = roomCapacity.querySelectorAll('option');
     options.forEach(function (item) {
       item.disabled = true;
     });
@@ -76,6 +79,26 @@
     }
   };
   // --------------------------------------------------------------------------
+  var callbackOnLoad = function () {
+    var messageStatus = window.variables.successMessage;
+    window.messages.createMessage('success', messageStatus);
+    resetAll();
+  };
+  // --------------------------------------------------------------------------
+  var callbackOnError = function (status) {
+    var messageStatus = window.variables.errorMessage + status;
+    window.messages.createMessage('error', messageStatus);
+  };
+  // --------------------------------------------------------------------------
+  var btnResetClickHandler = function () {
+    resetAll();
+  };
+  // --------------------------------------------------------------------------
+  var formSubmitHandler = function (evt) {
+    evt.preventDefault();
+    window.backend.uploadToServer(new FormData(evt.currentTarget), callbackOnLoad, callbackOnError);
+  };
+  // --------------------------------------------------------------------------
   var getCoordinates = function (target, offsetX, offsetY) {
     var x = target.offsetLeft + offsetX;
     var y = target.offsetTop + offsetY;
@@ -87,10 +110,22 @@
       var form = document.querySelector('.ad-form');
       form.addEventListener('change', formElementsChangeHandler, true);
       form.addEventListener('invalid', formElementsInvalidHandler, true);
+      form.addEventListener('submit', formSubmitHandler, true);
+      btnReset.addEventListener('click', btnResetClickHandler);
     },
     setAddressToForm: function (target, offsetX, offsetY) {
       adress.value = getCoordinates(target, offsetX, offsetY);
-      adress.disabled = true;
+      adress.readOnly = true;
+    },
+    setFormElementsNonActive: function (option) {
+      for (var i = 0; i < allElements.length; i++) {
+        allElements[i].setCustomValidity('');
+        allElements[i].style = '';
+        allElements[i].disabled = option;
+      }
+    },
+    resetAction: function (callback) {
+      resetAll = callback;
     }
   };
 })();

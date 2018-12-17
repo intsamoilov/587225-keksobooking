@@ -25,10 +25,22 @@
       var fragment = document.createDocumentFragment();
       var pin = document.querySelector('.map__pins');
       for (var i = 0; i < cards.length; i++) {
-        fragment = window.pin.createPin(cards[i], fragment);
+        if (cards[i].offer) {
+          fragment = window.pin.createPin(cards[i], fragment);
+        }
       }
       pin.appendChild(fragment);
     },
+    // ------------------------------------------------------------------------
+    removePins: function () {
+      var pinsArr = document.querySelectorAll('.map__pin');
+      pinsArr.forEach(function (item) {
+        if (!item.classList.contains('map__pin--main')) {
+          item.remove();
+        }
+      });
+    },
+    // ------------------------------------------------------------------------
     addPinClickHandler: addPinClickHandler,
     addPinKeyHandler: addPinKeyHandler
   };
