@@ -119,6 +119,7 @@
     },
     setFormElementsNonActive: function (option) {
       for (var i = 0; i < allElements.length; i++) {
+        allElements[i].setCustomValidity('');
         allElements[i].style = '';
         allElements[i].disabled = option;
       }
