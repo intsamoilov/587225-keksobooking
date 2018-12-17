@@ -18,9 +18,9 @@
         onError(xhr.status);
       });
       xhr.addEventListener('timeout', function () {
-        xhr = TIMEOUT;
         onError(xhr.status);
       });
+      xhr.timeout = TIMEOUT;
       xhr.open('GET', window.variables.LOAD_SERVER_URL);
       xhr.send();
     },
@@ -38,9 +38,9 @@
         onError(xhr.status);
       });
       xhr.addEventListener('timeout', function () {
-        xhr = TIMEOUT;
         onError(xhr.status);
       });
+      xhr.timeout = TIMEOUT;
       xhr.open('POST', window.variables.UPLOAD_SERVER_URL);
       xhr.send(data);
     }
