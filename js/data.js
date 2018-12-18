@@ -2,7 +2,8 @@
 (function () {
   // --------------------------------------------------------------------------
   var callbackOnLoad = function (data) {
-    window.pins.renderPins(data);
+    window.pins.renderPins(data, window.variables.AD_COUNT);
+    window.filter.saveRawData(data);
   };
   // --------------------------------------------------------------------------
   var callbackOnError = function (status) {

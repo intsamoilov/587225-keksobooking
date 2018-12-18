@@ -1,12 +1,12 @@
 'use strict';
 (function () {
   var allElements = window.variables.adForm.elements;
-  var roomNumber = document.getElementById('room_number');
-  var type = document.getElementById('type');
-  var timeIn = document.getElementById('timein');
-  var timeOut = document.getElementById('timeout');
-  var price = document.getElementById('price');
-  var roomCapacity = document.getElementById('capacity');
+  var roomNumber = document.querySelector('#room_number');
+  var type = document.querySelector('#type');
+  var timeIn = document.querySelector('#timein');
+  var timeOut = document.querySelector('#timeout');
+  var price = document.querySelector('#price');
+  var roomCapacity = document.querySelector('#capacity');
   var adress = document.querySelector('#address');
   var btnReset = document.querySelector('.ad-form__reset');
   var options = roomCapacity.querySelectorAll('option');
@@ -21,8 +21,8 @@
   };
   // --------------------------------------------------------------------------
   var setPriceByType = function (evt) {
-    price.min = window.variables.mapTypeToValues[evt.value].price;
-    price.placeholder = window.variables.mapTypeToValues[evt.value].price;
+    price.min = window.variables.MapTypeToValues[evt.value].price;
+    price.placeholder = window.variables.MapTypeToValues[evt.value].price;
   };
   // --------------------------------------------------------------------------
   var setGuestsValidityByRooms = function (evt) {

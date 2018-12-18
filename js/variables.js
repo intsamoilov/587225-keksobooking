@@ -7,12 +7,13 @@
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
   var PIN_MIN_X = 300;
-  var PIN_MAX_X = 900;
+  var PIN_MAX_X = 1200;
+  var AD_COUNT = 5;
   var KeyCode = {
     ESC: 27,
     ENTER: 13
   };
-  var mapTypeToValues = {
+  var MapTypeToValues = {
     palace: {
       name: 'Дворец',
       price: 10000
@@ -39,11 +40,12 @@
     PIN_MIN_X: PIN_MIN_X,
     PIN_MAX_X: PIN_MAX_X,
     KeyCode: KeyCode,
-    mapTypeToValues: mapTypeToValues,
+    MapTypeToValues: MapTypeToValues,
     LOAD_SERVER_URL: LOAD_SERVER_URL,
     UPLOAD_SERVER_URL: UPLOAD_SERVER_URL,
     adForm: adForm,
     successMessage: successMessage,
-    errorMessage: errorMessage
+    errorMessage: errorMessage,
+    AD_COUNT: AD_COUNT
   };
 })();
