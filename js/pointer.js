@@ -2,6 +2,8 @@
 (function () {
   var MAIN_PIN_START_LEFT = '570px';
   var MAIN_PIN_START_TOP = '375px';
+  var PIN_MAIN_WIDTH = 50;
+  var PIN_MAIN_HEIGHT = 70;
   var endCoord = {};
   var shift = {};
   var startCoord = {};
@@ -44,7 +46,9 @@
     init: function (setSiteActive, checkCoord) {
       callbackSite = setSiteActive;
       callbackCoord = checkCoord;
-    }
+    },
     // ------------------------------------------------------------------------
+    PIN_MAIN_WIDTH: PIN_MAIN_WIDTH,
+    PIN_MAIN_HEIGHT: PIN_MAIN_HEIGHT
   };
 })();

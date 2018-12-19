@@ -3,6 +3,7 @@
   // --------------------------------------------------------------------------
   var callbackOnLoad = function (data) {
     window.pins.renderPins(data);
+    window.filter.saveRawData(data);
   };
   // --------------------------------------------------------------------------
   var callbackOnError = function (status) {

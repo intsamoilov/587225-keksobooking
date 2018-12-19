@@ -108,6 +108,7 @@
       window.popup.hideCard();
       showCard(createCard(card));
     },
+    // ------------------------------------------------------------------------
     hideCard: function () {
       var card = document.querySelector('.map__card');
       if (card) {

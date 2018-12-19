@@ -7,7 +7,8 @@
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
   var PIN_MIN_X = 300;
-  var PIN_MAX_X = 900;
+  var PIN_MAX_X = 1200;
+  var AD_COUNT = 5;
   var KeyCode = {
     ESC: 27,
     ENTER: 13
@@ -32,6 +33,7 @@
   };
   // --------------------------------------------------------------------------
   var adForm = document.querySelector('.ad-form');
+  var filter = document.querySelector('.map__filters');
   // --------------------------------------------------------------------------
   window.variables = {
     PIN_MIN_Y: PIN_MIN_Y,
@@ -43,7 +45,9 @@
     LOAD_SERVER_URL: LOAD_SERVER_URL,
     UPLOAD_SERVER_URL: UPLOAD_SERVER_URL,
     adForm: adForm,
+    filter: filter,
     successMessage: successMessage,
-    errorMessage: errorMessage
+    errorMessage: errorMessage,
+    AD_COUNT: AD_COUNT
   };
 })();

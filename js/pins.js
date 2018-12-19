@@ -24,6 +24,9 @@
     renderPins: function (cards) {
       var fragment = document.createDocumentFragment();
       var pin = document.querySelector('.map__pins');
+      if (cards.length > window.variables.AD_COUNT) {
+        cards = cards.slice(0, window.variables.AD_COUNT);
+      }
       for (var i = 0; i < cards.length; i++) {
         if (cards[i].offer) {
           fragment = window.pin.createPin(cards[i], fragment);
