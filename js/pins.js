@@ -21,10 +21,13 @@
     PIN_WIDTH: PIN_WIDTH,
     PIN_HEIGHT: PIN_HEIGHT,
     // ------------------------------------------------------------------------
-    renderPins: function (cards, count) {
+    renderPins: function (cards) {
       var fragment = document.createDocumentFragment();
       var pin = document.querySelector('.map__pins');
-      for (var i = 0; i < count; i++) {
+      if (cards.length > window.variables.AD_COUNT) {
+        cards = cards.slice(0, window.variables.AD_COUNT);
+      }
+      for (var i = 0; i < cards.length; i++) {
         if (cards[i].offer) {
           fragment = window.pin.createPin(cards[i], fragment);
         }

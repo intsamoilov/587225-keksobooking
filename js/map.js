@@ -9,6 +9,7 @@
     window.pins.removePins();
     window.pointer.setToStart();
     window.variables.adForm.reset();
+    window.variables.filter.reset();
     window.variables.adForm.classList.add('ad-form--disabled');
     window.form.setFormElementsNonActive(true);
     window.form.setAddressToForm(window.pointer.mainPin, window.pointer.PIN_MAIN_WIDTH / 2, window.pointer.PIN_MAIN_HEIGHT / 2);

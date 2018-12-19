@@ -21,8 +21,8 @@
   };
   // --------------------------------------------------------------------------
   var setPriceByType = function (evt) {
-    price.min = window.variables.MapTypeToValues[evt.value].price;
-    price.placeholder = window.variables.MapTypeToValues[evt.value].price;
+    price.min = window.variables.mapTypeToValues[evt.value].price;
+    price.placeholder = window.variables.mapTypeToValues[evt.value].price;
   };
   // --------------------------------------------------------------------------
   var setGuestsValidityByRooms = function (evt) {

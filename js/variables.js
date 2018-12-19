@@ -13,7 +13,7 @@
     ESC: 27,
     ENTER: 13
   };
-  var MapTypeToValues = {
+  var mapTypeToValues = {
     palace: {
       name: 'Дворец',
       price: 10000
@@ -33,6 +33,7 @@
   };
   // --------------------------------------------------------------------------
   var adForm = document.querySelector('.ad-form');
+  var filter = document.querySelector('.map__filters');
   // --------------------------------------------------------------------------
   window.variables = {
     PIN_MIN_Y: PIN_MIN_Y,
@@ -40,10 +41,11 @@
     PIN_MIN_X: PIN_MIN_X,
     PIN_MAX_X: PIN_MAX_X,
     KeyCode: KeyCode,
-    MapTypeToValues: MapTypeToValues,
+    mapTypeToValues: mapTypeToValues,
     LOAD_SERVER_URL: LOAD_SERVER_URL,
     UPLOAD_SERVER_URL: UPLOAD_SERVER_URL,
     adForm: adForm,
+    filter: filter,
     successMessage: successMessage,
     errorMessage: errorMessage,
     AD_COUNT: AD_COUNT

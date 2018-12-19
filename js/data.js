@@ -2,7 +2,7 @@
 (function () {
   // --------------------------------------------------------------------------
   var callbackOnLoad = function (data) {
-    window.pins.renderPins(data, window.variables.AD_COUNT);
+    window.pins.renderPins(data);
     window.filter.saveRawData(data);
   };
   // --------------------------------------------------------------------------

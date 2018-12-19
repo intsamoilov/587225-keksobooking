@@ -51,7 +51,7 @@
       cardTemplate.querySelector('.popup__text--price').remove();
     }
     if (card.offer.type) {
-      cardTemplate.querySelector('.popup__type').textContent = window.variables.MapTypeToValues[card.offer.type].name;
+      cardTemplate.querySelector('.popup__type').textContent = window.variables.mapTypeToValues[card.offer.type].name;
     } else {
       cardTemplate.querySelector('.popup__type').remove();
     }

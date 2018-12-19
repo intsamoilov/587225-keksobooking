@@ -1,53 +1,36 @@
 'use strict';
 (function () {
   var rawArray;
-  var filter = document.querySelector('.map__filters');
-  var price = filter.querySelector('#housing-price');
-  var rooms = filter.querySelector('#housing-rooms');
-  var guests = filter.querySelector('#housing-guests');
-  var type = filter.querySelector('#housing-type');
-  var features = filter.querySelector('#housing-features');
-  var MapPrices = {
-    low: [0, 9999],
-    middle: [10000, 50000],
-    high: [50001, Infinity]
+  var price = window.variables.filter.querySelector('#housing-price');
+  var rooms = window.variables.filter.querySelector('#housing-rooms');
+  var guests = window.variables.filter.querySelector('#housing-guests');
+  var type = window.variables.filter.querySelector('#housing-type');
+  var features = window.variables.filter.querySelector('#housing-features');
+  var priceLow = 10000;
+  var priceHight = 50000;
+  // --------------------------------------------------------------------------
+  var typeFilter = function (element) {
+    return (type.value !== 'any') ? element.offer.type === type.value : true;
   };
   // --------------------------------------------------------------------------
-  var filterByType = function (array) {
-    if (type.value !== 'any') {
-      array = array.filter(function (element) {
-        return element.offer.type === type.value;
-      });
+  var priceFilter = function (element) {
+    switch (price.value) {
+      case 'low':
+        return element.offer.price < priceLow;
+      case 'middle':
+        return element.offer.price >= priceLow && element.offer.price <= priceHight;
+      case 'high':
+        return element.offer.price > priceHight;
     }
-    return array;
+    return true;
   };
   // --------------------------------------------------------------------------
-  var filterByPrice = function (array) {
-    if (price.value !== 'any') {
-      array = array.filter(function (element) {
-        return element.offer.price >= MapPrices[price.value][0]
-          && element.offer.price <= MapPrices[price.value][1];
-      });
-    }
-    return array;
+  var roomFilter = function (element) {
+    return (rooms.value !== 'any') ? element.offer.rooms.toString() === rooms.value : true;
   };
   // --------------------------------------------------------------------------
-  var filterByRooms = function (array) {
-    if (rooms.value !== 'any') {
-      array = array.filter(function (element) {
-        return element.offer.rooms.toString() === rooms.value;
-      });
-    }
-    return array;
-  };
-  // --------------------------------------------------------------------------
-  var filterByGuests = function (array) {
-    if (guests.value !== 'any') {
-      array = array.filter(function (element) {
-        return element.offer.guests.toString() === guests.value;
-      });
-    }
-    return array;
+  var guestsFilter = function (element) {
+    return (guests.value !== 'any') ? element.offer.guests.toString() === guests.value : true;
   };
   // --------------------------------------------------------------------------
   var filterByFeatures = function (array) {
@@ -71,25 +54,24 @@
   };
   // --------------------------------------------------------------------------
   var getActualData = function () {
-    var arrayByType = filterByType(rawArray);
-    var arrayByPrice = filterByPrice(arrayByType);
-    var arrayByRooms = filterByRooms(arrayByPrice);
-    var arrayByGuests = filterByGuests(arrayByRooms);
-    var arrayByFeatures = filterByFeatures(arrayByGuests);
-    return arrayByFeatures;
+    return filterByFeatures(rawArray
+      .filter(typeFilter)
+      .filter(priceFilter)
+      .filter(roomFilter)
+      .filter(guestsFilter));
   };
   // --------------------------------------------------------------------------
   var refreshPins = function () {
     var filteredData = getActualData();
     window.popup.hideCard();
     window.pins.removePins();
-    window.pins.renderPins(filteredData, filteredData.length);
+    window.pins.renderPins(filteredData);
   };
   var filterElementsChangeHandler = window.debounce(refreshPins);
   // --------------------------------------------------------------------------
   window.filter = {
     addFilterListeners: function () {
-      filter.addEventListener('change', filterElementsChangeHandler, true);
+      window.variables.filter.addEventListener('change', filterElementsChangeHandler, true);
     },
     // ------------------------------------------------------------------------
     saveRawData: function (serverData) {
