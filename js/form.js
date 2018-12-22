@@ -11,7 +11,7 @@
   var btnReset = document.querySelector('.ad-form__reset');
   var options = roomCapacity.querySelectorAll('option');
   var resetAll;
-  // --------------------------------------------------------------------------
+
   var setTimeInOut = function (evt) {
     if (evt === timeIn) {
       timeOut.value = timeIn.value;
@@ -19,12 +19,12 @@
       timeIn.value = timeOut.value;
     }
   };
-  // --------------------------------------------------------------------------
+
   var setPriceByType = function (evt) {
     price.min = window.variables.mapTypeToValues[evt.value].price;
     price.placeholder = window.variables.mapTypeToValues[evt.value].price;
   };
-  // --------------------------------------------------------------------------
+
   var setGuestsValidityByRooms = function (evt) {
     options.forEach(function (item) {
       item.disabled = true;
@@ -38,7 +38,7 @@
     }
     checkCapasity();
   };
-  // --------------------------------------------------------------------------
+
   var checkCapasity = function () {
     if (roomCapacity.value > roomNumber.value) {
       roomCapacity.setCustomValidity('Укажите правильное количество гостей');
@@ -51,11 +51,11 @@
       roomCapacity.style = '';
     }
   };
-  // --------------------------------------------------------------------------
+
   var formElementsInvalidHandler = function (evt) {
     evt.target.style.border = '3px solid red';
   };
-  // --------------------------------------------------------------------------
+
   var formElementsChangeHandler = function (evt) {
     if (evt.target.validity.valid) {
       evt.target.style = '';
@@ -78,33 +78,33 @@
         break;
     }
   };
-  // --------------------------------------------------------------------------
+
   var callbackOnLoad = function () {
     var messageStatus = window.variables.successMessage;
     window.messages.createMessage('success', messageStatus);
     resetAll();
   };
-  // --------------------------------------------------------------------------
+
   var callbackOnError = function (status) {
     var messageStatus = window.variables.errorMessage + status;
     window.messages.createMessage('error', messageStatus);
   };
-  // --------------------------------------------------------------------------
+
   var btnResetClickHandler = function () {
     resetAll();
   };
-  // --------------------------------------------------------------------------
+
   var formSubmitHandler = function (evt) {
     evt.preventDefault();
-    window.backend.uploadToServer(new FormData(evt.currentTarget), callbackOnLoad, callbackOnError);
+    window.backend.load(callbackOnLoad, callbackOnError, new FormData(evt.currentTarget));
   };
-  // --------------------------------------------------------------------------
+
   var getCoordinates = function (target, offsetX, offsetY) {
     var x = target.offsetLeft + offsetX;
     var y = target.offsetTop + offsetY;
     return x + ', ' + y;
   };
-  // --------------------------------------------------------------------------
+
   window.form = {
     addFormListeners: function () {
       var form = document.querySelector('.ad-form');

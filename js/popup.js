@@ -3,13 +3,13 @@
   var OFFER_IMAGE_WIDTH = 45;
   var OFFER_IMAGE_HEIGHT = 40;
   var OFFER_IMAGE_ALT = 'Фотография жилья';
-  // --------------------------------------------------------------------------
+
   var onEscKeyDown = function (evt) {
     if (evt.keyCode === window.variables.KeyCode.ESC) {
       window.popup.hideCard();
     }
   };
-  // --------------------------------------------------------------------------
+
   var renderPhotos = function (card, element) {
     element.querySelector('.popup__photos').innerHTML = '';
     for (var i = 0; i < card.offer.photos.length; i++) {
@@ -22,7 +22,7 @@
       element.querySelector('.popup__photos').appendChild(img);
     }
   };
-  // --------------------------------------------------------------------------
+
   var renderFeatures = function (card, element) {
     element.querySelector('.popup__features').innerHTML = '';
     for (var i = 0; i < card.offer.features.length; i++) {
@@ -32,7 +32,7 @@
       element.querySelector('.popup__features').appendChild(li);
     }
   };
-  // --------------------------------------------------------------------------
+
   var createCard = function (card) {
     var cardTemplate = document.querySelector('#card').content.cloneNode(true);
     if (card.offer.title) {
@@ -89,7 +89,7 @@
     }
     return cardTemplate;
   };
-  // --------------------------------------------------------------------------
+
   var showCard = function (cardContent) {
     document.querySelector('.map').insertBefore(cardContent,
         document.querySelector('.map__filters-container'));
@@ -98,17 +98,17 @@
     popupCloseBtn.addEventListener('click', onPopupCloseClick);
     document.addEventListener('keydown', onEscKeyDown);
   };
-  // --------------------------------------------------------------------------
+
   var onPopupCloseClick = function () {
     window.popup.hideCard();
   };
-  // --------------------------------------------------------------------------
+
   window.popup = {
     renderCard: function (card) {
       window.popup.hideCard();
       showCard(createCard(card));
     },
-    // ------------------------------------------------------------------------
+
     hideCard: function () {
       var card = document.querySelector('.map__card');
       if (card) {

@@ -1,8 +1,7 @@
 'use strict';
 (function () {
-  // ----------------------------------------------------------------------------
   var map = document.querySelector('.map');
-  // ----------------------------------------------------------------------------
+
   var setSiteNonActive = function () {
     map.classList.add('map--faded');
     window.popup.hideCard();
@@ -16,7 +15,7 @@
     window.pointer.mainPin.addEventListener('mousedown', window.pointer.onMainPinMousedown);
     window.pointer.init(setSiteActive, checkCoord);
   };
-  // ----------------------------------------------------------------------------
+
   var setSiteActive = function () {
     window.form.setAddressToForm(window.pointer.mainPin, window.pointer.PIN_MAIN_WIDTH / 2, window.pointer.PIN_MAIN_HEIGHT);
     if (map.classList.contains('map--faded')) {
@@ -29,10 +28,10 @@
       window.form.resetAction(setSiteNonActive);
     }
   };
-  // ----------------------------------------------------------------------------
+
   var checkCoord = function (endCoord) {
-    if (endCoord.x > window.variables.PIN_MAX_X - window.pointer.PIN_MAIN_WIDTH / 2) {
-      endCoord.x = window.variables.PIN_MAX_X - window.pointer.PIN_MAIN_WIDTH / 2;
+    if (endCoord.x > window.variables.PIN_MAX_X - window.pointer.PIN_MAIN_WIDTH) {
+      endCoord.x = window.variables.PIN_MAX_X - window.pointer.PIN_MAIN_WIDTH;
     } else if (endCoord.x < window.variables.PIN_MIN_X - window.pointer.PIN_MAIN_WIDTH / 2) {
       endCoord.x = window.variables.PIN_MIN_X - window.pointer.PIN_MAIN_WIDTH / 2;
     }
@@ -43,6 +42,6 @@
     }
     return endCoord;
   };
-  // ----------------------------------------------------------------------------
+
   setSiteNonActive();
 })();

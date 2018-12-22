@@ -3,7 +3,7 @@
   var PIN_IMG_WIDTH = 40;
   var PIN_IMG_HEIGHT = 40;
   var PIN_ALT = 'Метка объявления';
-  // --------------------------------------------------------------------------
+
   window.pin = {
     createPin: function (card, fragment) {
       var div = document.createElement('div');
