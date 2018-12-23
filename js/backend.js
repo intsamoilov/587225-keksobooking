@@ -4,9 +4,7 @@
   var HTTP_SUCCESS_CODE = 200;
 
   window.backend = {
-    load: function (onLoad, onError, data) {
-      var type = data ? 'POST' : 'GET';
-      var url = data ? window.variables.UPLOAD_SERVER_URL : window.variables.LOAD_SERVER_URL;
+    load: function (onLoad, onError, type, url, data) {
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
       xhr.addEventListener('load', function () {

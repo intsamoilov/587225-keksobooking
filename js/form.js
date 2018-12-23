@@ -96,7 +96,8 @@
 
   var formSubmitHandler = function (evt) {
     evt.preventDefault();
-    window.backend.load(callbackOnLoad, callbackOnError, new FormData(evt.currentTarget));
+    window.backend.load(callbackOnLoad, callbackOnError, 'POST',
+        window.variables.UPLOAD_SERVER_URL, new FormData(evt.currentTarget));
   };
 
   var getCoordinates = function (target, offsetX, offsetY) {

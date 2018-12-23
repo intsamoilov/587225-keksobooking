@@ -12,7 +12,7 @@
 
   window.data = {
     getDataArray: function () {
-      window.backend.load(callbackOnLoad, callbackOnError);
+      window.backend.load(callbackOnLoad, callbackOnError, 'GET', window.variables.LOAD_SERVER_URL);
     }
   };
 })();
