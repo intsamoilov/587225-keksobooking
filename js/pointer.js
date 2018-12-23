@@ -10,7 +10,7 @@
   var callbackSite;
   var callbackCoord;
   var mainPin = document.querySelector('.map__pin--main');
-  // --------------------------------------------------------------------------
+
   var onMouseMove = function (moveEvt) {
     shift.x = startCoord.x - moveEvt.clientX;
     shift.y = startCoord.y - moveEvt.clientY;
@@ -22,13 +22,13 @@
     mainPin.style.left = endCoord.x + 'px';
     mainPin.style.top = endCoord.y + 'px';
   };
-  // --------------------------------------------------------------------------
+
   var onMouseUp = function () {
     callbackSite();
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
   };
-  // --------------------------------------------------------------------------
+
   window.pointer = {
     mainPin: mainPin,
     onMainPinMousedown: function (evt) {
@@ -37,17 +37,17 @@
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     },
-    // ------------------------------------------------------------------------
+
     setToStart: function () {
       mainPin.style.left = MAIN_PIN_START_LEFT;
       mainPin.style.top = MAIN_PIN_START_TOP;
     },
-    // ------------------------------------------------------------------------
+
     init: function (setSiteActive, checkCoord) {
       callbackSite = setSiteActive;
       callbackCoord = checkCoord;
     },
-    // ------------------------------------------------------------------------
+
     PIN_MAIN_WIDTH: PIN_MAIN_WIDTH,
     PIN_MAIN_HEIGHT: PIN_MAIN_HEIGHT
   };

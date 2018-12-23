@@ -31,10 +31,9 @@
       price: 0
     }
   };
-  // --------------------------------------------------------------------------
   var adForm = document.querySelector('.ad-form');
   var filter = document.querySelector('.map__filters');
-  // --------------------------------------------------------------------------
+
   window.variables = {
     PIN_MIN_Y: PIN_MIN_Y,
     PIN_MAX_Y: PIN_MAX_Y,
