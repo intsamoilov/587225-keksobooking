@@ -32,8 +32,8 @@
   var checkCoord = function (endCoord) {
     if (endCoord.x > window.variables.PIN_MAX_X - window.pointer.PIN_MAIN_WIDTH) {
       endCoord.x = window.variables.PIN_MAX_X - window.pointer.PIN_MAIN_WIDTH;
-    } else if (endCoord.x < window.variables.PIN_MIN_X - window.pointer.PIN_MAIN_WIDTH / 2) {
-      endCoord.x = window.variables.PIN_MIN_X - window.pointer.PIN_MAIN_WIDTH / 2;
+    } else if (endCoord.x < window.variables.PIN_MIN_X) {
+      endCoord.x = window.variables.PIN_MIN_X;
     }
     if (endCoord.y > window.variables.PIN_MAX_Y - window.pointer.PIN_MAIN_HEIGHT) {
       endCoord.y = window.variables.PIN_MAX_Y - window.pointer.PIN_MAIN_HEIGHT;

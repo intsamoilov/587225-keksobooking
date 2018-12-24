@@ -1,13 +1,13 @@
 'use strict';
 (function () {
+  var PRICE_LOW = 10000;
+  var PRICE_HIGHT = 50000;
   var rawArray;
   var price = window.variables.filter.querySelector('#housing-price');
   var rooms = window.variables.filter.querySelector('#housing-rooms');
   var guests = window.variables.filter.querySelector('#housing-guests');
   var type = window.variables.filter.querySelector('#housing-type');
   var features = window.variables.filter.querySelector('#housing-features');
-  var PRICE_LOW = 10000;
-  var PRICE_HIGHT = 50000;
 
   var typeFilter = function (element) {
     return (type.value !== 'any') ? element.offer.type === type.value : true;

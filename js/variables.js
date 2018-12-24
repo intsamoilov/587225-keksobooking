@@ -6,7 +6,7 @@
   var errorMessage = 'Ошибка загрузки. Код ошибки: ';
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
-  var PIN_MIN_X = 300;
+  var PIN_MIN_X = 0;
   var PIN_MAX_X = 1200;
   var AD_COUNT = 5;
   var KeyCode = {
